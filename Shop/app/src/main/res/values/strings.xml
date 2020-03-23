@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyFirstShop</string>
+    <string name="app_name_order">My Order</string>
+
+</resources>
