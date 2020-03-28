@@ -26,12 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        adapter = new RecyclerViewAdapter(recyclerViewItems);
+        adapter = new RecyclerViewAdapter(recyclerViewItems, this);
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
-
 
     }
 }

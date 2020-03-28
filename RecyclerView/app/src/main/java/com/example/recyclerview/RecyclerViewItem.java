@@ -23,4 +23,5 @@ public class RecyclerViewItem {
         return text2;
     }
 
+
 }
