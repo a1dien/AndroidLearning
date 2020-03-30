@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_settings_applications_black_24dp"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_about"
+        android:title="About"
+        android:orderInCategory="110"
+        android:icon="@drawable/ic_question_answer_black_24dp"
+        app:showAsAction="never"/>
+
+
+
+</menu>
