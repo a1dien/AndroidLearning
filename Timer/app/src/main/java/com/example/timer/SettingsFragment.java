@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         Toast toast = Toast.makeText(getContext(), "Please enter an integer number", Toast.LENGTH_LONG);
-        
+
         if (preference.getKey().equals("default_interval")) {
             String defaultIntervalString = (String) newValue;
 
