@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sportclub.data.ClubCursorAdapter;
+import com.example.sportclub.data.ClubDBHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.sportclub.data.ClubContract.MemberEntry;
 
@@ -22,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dataTextView = findViewById(R.id.dataTextView);
+        //dataTextView = findViewById(R.id.dataTextView);
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
 
@@ -38,7 +42,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayData();
+
+        ClubDBHelper dbHelper = new ClubDBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MemberEntry.TABLE_NAME, null);
+        ListView lvItems = (ListView) findViewById(R.id.lvItems);
+        ClubCursorAdapter adapter = new ClubCursorAdapter(this, cursor);
+        lvItems.setAdapter(adapter);
+        adapter.changeCursor(cursor);
+
+
+        //displayData();
     }
 
     private void displayData()  {
