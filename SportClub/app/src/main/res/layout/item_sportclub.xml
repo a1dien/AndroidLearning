@@ -3,21 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    >
 
     <TextView
-        android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
+        android:id="@+id/firstNameTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Study cursors"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
 
     <TextView
-        android:id="@+id/tvPriority"
-        android:layout_width="wrap_content"
+        android:id="@+id/lastNameTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="3"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/sportTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textStyle="italic"
+        />
 
 </LinearLayout>

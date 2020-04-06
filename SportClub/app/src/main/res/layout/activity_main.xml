@@ -31,10 +31,14 @@
         android:layout_alignParentLeft="true" />
 -->
     <ListView
-        android:id="@+id/lvItems"
+        android:id="@+id/dataListView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_alignParentLeft="true" />
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"

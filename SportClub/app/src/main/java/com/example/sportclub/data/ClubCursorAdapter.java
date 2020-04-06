@@ -29,13 +29,16 @@ public class ClubCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //Find fields to populate in inflated template
-        TextView sportClubID = (TextView)view.findViewById(R.id.tvBody);
-        TextView sportClubFirstName = (TextView)view.findViewById(R.id.tvPriority);
+        TextView sportClubFirstName = (TextView)view.findViewById(R.id.firstNameTextView);
+        TextView sportClubLastName = (TextView)view.findViewById(R.id.lastNameTextView);
+        TextView sportClubSport = (TextView)view.findViewById(R.id.sportTextView);
         //Extract properties from cursor
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
-        String firstName = cursor.getString(cursor.getColumnIndexOrThrow("firstName"));
+        String firstName = cursor.getString(cursor.getColumnIndexOrThrow(MemberEntry.COLUMN_FIRST_NAME));
+        String lastName = cursor.getString(cursor.getColumnIndexOrThrow(MemberEntry.COLUMN_LAST_NAME));
+        String sportName = cursor.getString(cursor.getColumnIndexOrThrow(MemberEntry.COLUMN_SPORT));
         //Populate fields with extracted properties
-        sportClubID.setText(id);
         sportClubFirstName.setText(firstName);
+        sportClubLastName.setText(lastName);
+        sportClubSport.setText(sportName);
     }
 }

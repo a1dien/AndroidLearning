@@ -74,8 +74,9 @@ public class ClubContentProvider extends ContentProvider {
             throw new IllegalArgumentException("You have to input last name");
         }
         Integer gender = values.getAsInteger(MemberEntry.COLUMN_GENDER);
-        if (gender == null || !(gender == MemberEntry.GENDER_UNKOWN) || !(gender == MemberEntry.GENDER_FEMALE) || !(gender == MemberEntry.GENDER_MALE)) {
-            throw new IllegalArgumentException("You have to input correct gender");
+        if (gender == null || !(gender == MemberEntry.GENDER_UNKNOWN || gender == MemberEntry.GENDER_MALE || gender == MemberEntry.GENDER_FEMALE)) {
+            throw new IllegalArgumentException
+                    ("You have to input correct gender");
         }
         String sport = values.getAsString(MemberEntry.COLUMN_SPORT);
         if (sport == null) {
@@ -90,6 +91,7 @@ public class ClubContentProvider extends ContentProvider {
                     Log.e ("insertMethod", "Insertion of data in the table failed for " + uri);
                     return null;
                 }
+                getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, id);
             default:
                 throw new IllegalArgumentException("Insertion of data in the table failed for " + uri);
@@ -100,18 +102,25 @@ public class ClubContentProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase db = clubDBHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
+        int rowsDeleted;
         switch (match) {
             case MEMBERS:
-                return db.delete(MemberEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(MemberEntry.TABLE_NAME, selection, selectionArgs);
+                break;
 
             case MEMBER_ID:
                 selection = MemberEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                return db.delete(MemberEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(MemberEntry.TABLE_NAME, selection, selectionArgs);
+                break;
 
             default:
                 throw new IllegalArgumentException("Can't delete incorrect URI " + uri);
         }
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
     }
 
     @Override
@@ -131,7 +140,7 @@ public class ClubContentProvider extends ContentProvider {
         }
         if (values.containsKey(MemberEntry.COLUMN_GENDER)) {
             Integer gender = values.getAsInteger(MemberEntry.COLUMN_GENDER);
-            if (gender == null || !(gender == MemberEntry.GENDER_UNKOWN) || !(gender == MemberEntry.GENDER_FEMALE) || !(gender == MemberEntry.GENDER_MALE)) {
+            if (gender == null || !(gender == MemberEntry.GENDER_UNKNOWN || gender == MemberEntry.GENDER_FEMALE || gender == MemberEntry.GENDER_MALE)) {
                 throw new IllegalArgumentException("You have to input correct gender");
             }
         }
@@ -144,18 +153,25 @@ public class ClubContentProvider extends ContentProvider {
 
         SQLiteDatabase db = clubDBHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
+        int rowsUpdated;
         switch (match) {
             case MEMBERS:
-                return db.update(MemberEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowsUpdated =  db.update(MemberEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
 
             case MEMBER_ID:
                 selection = MemberEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                return db.update(MemberEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowsUpdated =  db.update(MemberEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
 
             default:
                 throw new IllegalArgumentException("Can't update incorrect URI " + uri);
         }
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 
     @Nullable

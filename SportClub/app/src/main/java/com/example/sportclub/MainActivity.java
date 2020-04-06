@@ -1,12 +1,21 @@
 package com.example.sportclub;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,9 +25,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.sportclub.data.ClubContract.MemberEntry;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    TextView dataTextView;
+    //TextView dataTextView;
+    ListView dataListView;
+    private static final int MEMBER_LOADER=123;
+    private CursorAdapter memberCursorAdapter;
+
 
     private FloatingActionButton floatingActionButton;
     @Override
@@ -27,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //dataTextView = findViewById(R.id.dataTextView);
+        dataListView = findViewById(R.id.dataListView);
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
 
@@ -37,24 +51,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
+        memberCursorAdapter = new ClubCursorAdapter(this, null);
+        dataListView.setAdapter(memberCursorAdapter);
 
+        dataListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, AddMemberActivity.class);
+                Uri currentMemberUri = ContentUris.withAppendedId(MemberEntry.CONTENT_URI, id);
+                intent.setData(currentMemberUri);
+                startActivity(intent);
+            }
+        });
+
+        getSupportLoaderManager().initLoader(MEMBER_LOADER, null, this);
+    }
+/*
     @Override
     protected void onStart() {
         super.onStart();
 
-        ClubDBHelper dbHelper = new ClubDBHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + MemberEntry.TABLE_NAME, null);
-        ListView lvItems = (ListView) findViewById(R.id.lvItems);
-        ClubCursorAdapter adapter = new ClubCursorAdapter(this, cursor);
-        lvItems.setAdapter(adapter);
-        adapter.changeCursor(cursor);
-
-
-        //displayData();
+        displayData();
     }
-
+*/
+/* All gone to CursorLoader
     private void displayData()  {
         String[] projection = {
                 MemberEntry._ID,
@@ -70,6 +90,12 @@ public class MainActivity extends AppCompatActivity {
                 null,
                 null
                 );
+
+        ClubCursorAdapter adapter = new ClubCursorAdapter(this, cursor);
+        dataListView.setAdapter(adapter);
+        //adapter.changeCursor(cursor);
+
+        /*
         dataTextView.setText("All Members\n\n");
         dataTextView.append(
                 MemberEntry._ID + " " +
@@ -93,7 +119,36 @@ public class MainActivity extends AppCompatActivity {
             dataTextView.append("\n" + currentId + " " + currentFirstName + " " + currentLastName + " " + currentGender + " " + currentSport);
         }
         cursor.close();
+
+    }
+        */
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        String[] projection = {
+                MemberEntry._ID,
+                MemberEntry.COLUMN_FIRST_NAME,
+                MemberEntry.COLUMN_LAST_NAME,
+                MemberEntry.COLUMN_SPORT
+        };
+        CursorLoader cursorLoader = new CursorLoader(this,
+                MemberEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+        );
+        return cursorLoader;
     }
 
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        memberCursorAdapter.swapCursor(data);
+    }
 
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        memberCursorAdapter.swapCursor(null);
+    }
 }
