@@ -13,7 +13,7 @@ import java.util.List;
 
 import Model.Car;
 import Utils.Util;
-
+/*
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     public DatabaseHandler(@Nullable Context context) {
@@ -116,3 +116,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 }
+*/
